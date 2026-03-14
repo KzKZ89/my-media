@@ -32,44 +32,58 @@ async function fetchAPI<T>(
   path: string,
   params: Record<string, string> = {},
   tags: string[] = [],
+  fallback: T,
 ): Promise<T> {
-  const url = new URL(`${getBaseUrl()}${path}`);
-  Object.entries(params).forEach(([key, value]) => {
-    url.searchParams.set(key, value);
-  });
+  try {
+    const url = new URL(`${getBaseUrl()}${path}`);
+    Object.entries(params).forEach(([key, value]) => {
+      url.searchParams.set(key, value);
+    });
 
-  const res = await fetch(url.toString(), {
-    next: { revalidate: 60, tags },
-  });
+    const res = await fetch(url.toString(), {
+      next: { revalidate: 60, tags },
+    });
 
-  if (!res.ok) {
-    throw new Error(`WordPress API error: ${res.status} ${res.statusText}`);
+    if (!res.ok) {
+      console.error(`WordPress API error: ${res.status} ${res.statusText}`);
+      return fallback;
+    }
+
+    return (await res.json()) as T;
+  } catch (error) {
+    console.error('WordPress API fetch failed:', error);
+    return fallback;
   }
-
-  return res.json() as Promise<T>;
 }
 
 async function fetchAPIWithHeaders<T>(
   path: string,
   params: Record<string, string> = {},
   tags: string[] = [],
+  fallback: T,
 ): Promise<{ data: T; totalPages: number }> {
-  const url = new URL(`${getBaseUrl()}${path}`);
-  Object.entries(params).forEach(([key, value]) => {
-    url.searchParams.set(key, value);
-  });
+  try {
+    const url = new URL(`${getBaseUrl()}${path}`);
+    Object.entries(params).forEach(([key, value]) => {
+      url.searchParams.set(key, value);
+    });
 
-  const res = await fetch(url.toString(), {
-    next: { revalidate: 60, tags },
-  });
+    const res = await fetch(url.toString(), {
+      next: { revalidate: 60, tags },
+    });
 
-  if (!res.ok) {
-    throw new Error(`WordPress API error: ${res.status} ${res.statusText}`);
+    if (!res.ok) {
+      console.error(`WordPress API error: ${res.status} ${res.statusText}`);
+      return { data: fallback, totalPages: 0 };
+    }
+
+    const totalPages = parseInt(res.headers.get('X-WP-TotalPages') || '1', 10);
+    const data = (await res.json()) as T;
+    return { data, totalPages };
+  } catch (error) {
+    console.error('WordPress API fetch failed:', error);
+    return { data: fallback, totalPages: 0 };
   }
-
-  const totalPages = parseInt(res.headers.get('X-WP-TotalPages') || '1', 10);
-  const data = (await res.json()) as T;
-  return { data, totalPages };
 }
 
 // --- 変換ヘルパー ---
@@ -143,7 +157,7 @@ export async function getPosts(
     params.categories = String(categoryId);
   }
 
-  const posts = await fetchAPI<WPPost[]>('/posts', params, ['posts']);
+  const posts = await fetchAPI<WPPost[]>('/posts', params, ['posts'], []);
   return posts.map(mapPost);
 }
 
@@ -172,6 +186,7 @@ export async function getPostsPaginated(
     '/posts',
     params,
     ['posts'],
+    [],
   );
   return { posts: data.map(mapPost), totalPages };
 }
@@ -191,6 +206,7 @@ export async function getPostBySlug(
       _embed: 'wp:featuredmedia,wp:term',
     },
     [`post-${slug}`],
+    [],
   );
 
   if (posts.length === 0) return null;
@@ -214,6 +230,7 @@ export async function getCategories(): Promise<Category[]> {
     '/categories',
     params,
     ['categories'],
+    [],
   );
   return categories.map(mapCategory);
 }
@@ -236,7 +253,7 @@ export async function getRelatedPosts(
     orderby: 'date',
     order: 'desc',
   };
-  const posts = await fetchAPI<WPPost[]>('/posts', params, ['posts']);
+  const posts = await fetchAPI<WPPost[]>('/posts', params, ['posts'], []);
   return posts
     .filter((p) => p.slug !== excludeSlug)
     .slice(0, count)
@@ -255,6 +272,7 @@ export async function getCategoryBySlug(
     '/categories',
     { slug },
     [`category-${slug}`],
+    [],
   );
 
   if (categories.length === 0) return null;
