@@ -11,9 +11,33 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        brand: {
+          DEFAULT: "#2563eb",
+          dark: "#1d4ed8",
+        },
+        navy: {
+          DEFAULT: "#0f172a",
+          light: "#1e293b",
+        },
+        gray: {
+          text: "#64748b",
+          bg: "#f8fafc",
+        },
+      },
+      fontFamily: {
+        sans: ["var(--font-noto-sans-jp)", "sans-serif"],
+      },
+      keyframes: {
+        "logo-scroll": {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
+      },
+      animation: {
+        "logo-scroll": "logo-scroll 30s linear infinite",
       },
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/typography")],
 };
 export default config;
