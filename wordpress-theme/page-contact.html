@@ -1,0 +1,74 @@
+<!-- ==========================================================================
+     お問い合わせページ
+     WordPressの固定ページエディタ → 「カスタムHTML」ブロックに貼り付け
+
+     ※ Contact Form 7 のショートコード [contact-form-7 id="XXX"] を
+       実際のフォームIDに置き換えてください。
+     ========================================================================== -->
+
+<!-- ── ページヘッダー ── -->
+<div class="page-header">
+  <span class="section-label">Contact</span>
+  <h1>お問い合わせ</h1>
+  <p>サービスに関するご質問・ご相談はこちらからお気軽にどうぞ。</p>
+</div>
+
+<!-- ── フォームセクション ── -->
+<div class="section">
+  <div class="section-inner">
+    <div style="max-width: 640px; margin: 0 auto;">
+
+      <!-- Contact Form 7 ショートコード -->
+      [contact-form-7 id="YOUR_FORM_ID" title="お問い合わせフォーム"]
+
+      <!--
+        CF7側のフォームテンプレート例（CF7の編集画面に貼り付け）：
+
+        <div class="form-group">
+          <label>会社名 <span class="required">*</span></label>
+          [text* company placeholder "例：株式会社COuld"]
+        </div>
+
+        <div class="form-group">
+          <label>お名前 <span class="required">*</span></label>
+          [text* your-name placeholder "例：吉田 和樹"]
+        </div>
+
+        <div class="form-group">
+          <label>メールアドレス <span class="required">*</span></label>
+          [email* your-email placeholder "例：info@could.co.jp"]
+        </div>
+
+        <div class="form-group">
+          <label>電話番号</label>
+          [tel your-tel placeholder "例：03-1234-5678"]
+        </div>
+
+        <div class="form-group">
+          <label>ご相談内容 <span class="required">*</span></label>
+          [select* inquiry-type "インサイドセールス支援について" "カスタマーサクセス支援について" "採用支援について" "その他"]
+        </div>
+
+        <div class="form-group">
+          <label>詳細・ご質問 <span class="required">*</span></label>
+          [textarea* your-message placeholder "具体的なご要望やご質問をお書きください"]
+        </div>
+
+        <div class="form-group">
+          [submit "送信する"]
+        </div>
+      -->
+
+    </div>
+  </div>
+</div>
+
+<!-- ── 補足情報 ── -->
+<div class="section-sm bg-gray">
+  <div class="section-inner text-center">
+    <p style="font-size: 14px; color: var(--text-muted); max-width: 520px; margin: 0 auto;">
+      通常1営業日以内にご返信いたします。<br>
+      お急ぎの場合は <a href="mailto:info@could.co.jp" style="color: var(--brand);">info@could.co.jp</a> まで直接ご連絡ください。
+    </p>
+  </div>
+</div>
