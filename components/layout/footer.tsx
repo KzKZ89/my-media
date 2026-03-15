@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 const footerLinks = [
   { label: '記事一覧', href: '/blog' },
@@ -13,8 +14,14 @@ export function Footer() {
     <footer className="bg-navy text-white">
       <div className="mx-auto max-w-6xl px-6 py-16">
         <div className="flex flex-col items-start justify-between gap-8 sm:flex-row sm:items-center">
-          <Link href="/" className="text-xl font-bold tracking-tight">
-            MyMedia
+          <Link href="/">
+            <Image
+              src="http://could.co.jp/wp-content/uploads/2026/03/3b6a6774ddfe85847ebf0a5c85415752.png"
+              alt="COuld inc"
+              width={120}
+              height={40}
+              className="h-10 w-auto brightness-0 invert"
+            />
           </Link>
           <nav className="flex flex-wrap gap-x-8 gap-y-3">
             {footerLinks.map((item) => (
